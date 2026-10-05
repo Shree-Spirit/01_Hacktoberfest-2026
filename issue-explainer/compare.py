@@ -5,6 +5,7 @@ from pathlib import Path
 
 from explain import explain, hallucinated_files, repo_file_paths
 
+ROOT = Path(__file__).resolve().parent
 MODELS = ["gemma3:4b", "qwen2.5:3b", "qwen2.5:7b"]
 
 
@@ -33,7 +34,7 @@ def main():
             f"**Hallucinated files:** {check}\n"
         )
     lines.extend(["", *bodies])
-    path = Path(f"comparison_{repo}_{number}.md")
+    path = ROOT / f"comparison_{repo}_{number}.md"
     path.write_text("\n".join(lines), encoding="utf-8")
     print(f"Wrote {path.resolve()}")
     return 0

@@ -15,7 +15,8 @@ DEFAULT_MODEL = "gemma3:4b"
 
 
 def _headers():
-    h = {"Accept": "application/vnd.github+json", "User-Agent": "issue-explainer"}
+    h = {"Accept": "application/vnd.github+json",
+         "User-Agent": "issue-explainer"}
     token = os.environ.get("GITHUB_TOKEN", "").strip()
     if token:
         h["Authorization"] = f"Bearer {token}"
@@ -46,10 +47,12 @@ def repo_file_paths(owner, repo):
     if err:
         return "", err
     branch = data.get("default_branch", "main")
-    tree, err = _get(f"{API}/repos/{owner}/{repo}/git/trees/{branch}", {"recursive": "1"})
+    tree, err = _get(
+        f"{API}/repos/{owner}/{repo}/git/trees/{branch}", {"recursive": "1"})
     if err:
         return "", err
-    paths = "\n".join(i["path"] for i in tree.get("tree", []) if i.get("type") == "blob")
+    paths = "\n".join(i["path"] for i in tree.get(
+        "tree", []) if i.get("type") == "blob")
     return paths[:4000], None
 
 
@@ -60,9 +63,11 @@ def load_friend():
 
 def hallucinated_files(answer, tree_text):
     known = {p.strip() for p in tree_text.splitlines() if p.strip()}
-    match = re.search(r"(?is)##?\s*Where to look\b.*?\n(.*?)(?=\n##?\s|\Z)", answer)
+    match = re.search(
+        r"(?is)##?\s*Where to look\b.*?\n(.*?)(?=\n##?\s|\Z)", answer)
     chunk = match.group(1) if match else answer
-    found = re.findall(r"`([^`]+)`|([A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)+)", chunk)
+    found = re.findall(
+        r"`([^`]+)`|([A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)+)", chunk)
     names = {a or b for a, b in found}
     return sorted(n.strip() for n in names if n.strip() and n.strip() not in known)
 
@@ -112,7 +117,8 @@ Reply in markdown with exactly these headings:
 ## One question to ask the maintainer
 """
     try:
-        resp = ollama.chat(model=model, messages=[{"role": "user", "content": prompt}])
+        resp = ollama.chat(model=model, messages=[
+                           {"role": "user", "content": prompt}])
     except Exception as exc:
         text = str(exc).lower()
         if "connect" in text or "refused" in text or "10061" in text:
@@ -124,13 +130,16 @@ Reply in markdown with exactly these headings:
 def main():
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
-    p = argparse.ArgumentParser(description="Explain a GitHub issue for a friend")
+    p = argparse.ArgumentParser(
+        description="Explain a GitHub issue for a friend")
     p.add_argument("owner")
     p.add_argument("repo")
     p.add_argument("number", type=int)
-    p.add_argument("--model", default=DEFAULT_MODEL)
+    p.add_argument("model_pos", nargs="?")
+    p.add_argument("--model", dest="model_option")
     args = p.parse_args()
-    print(explain(args.owner, args.repo, args.number, args.model))
+    model = args.model_option or args.model_pos or DEFAULT_MODEL
+    print(explain(args.owner, args.repo, args.number, model))
     return 0
 
 

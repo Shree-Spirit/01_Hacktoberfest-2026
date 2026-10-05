@@ -1,0 +1,45 @@
+# Comparison for ollama/ollama#1
+
+| Model      | Time (s) |
+| ---------- | -------: |
+| gemma3:4b  |      0.0 |
+| qwen2.5:3b |      0.0 |
+| qwen2.5:7b |      0.0 |
+
+## gemma3:4b (0.0s)
+
+## Summary
+
+This is a request to refactor the Ollama codebase. It’s a relatively simple task focusing on improving the internal structure of the application. The issue is likely related to ongoing development and maintenance.
+
+## Type
+
+Bug/Refactor
+
+## Difficulty
+
+Medium - Sam has Python and Git experience, and is starting with JavaScript. The codebase _looks_ large (many files), but refactoring is often about making code clearer and more maintainable, which doesn't require deep understanding of every part.
+
+## Skills needed
+
+Understanding of code refactoring principles, familiarity with Go (based on the file extensions), and the ability to read and understand Go code.
+
+## Where to look
+
+- `.github/ISSUE_TEMPLATE/10_bug_report.yml` - For understanding the issue template and how to report bugs.
+- `README.md` - High-level overview of the project.
+- `CONTRIBUTING.md` - Guidelines for contributing to the project.
+- `CMakeLists.txt`, `CMakePresets.json` - These are used for building the project, but likely won’t be needed for a refactor.
+- `app/` - This directory contains the main application code.
+
+## First 3 steps
+
+1.  **Read the issue description:** Carefully understand the specific goal of the refactor.
+2.  **Explore the relevant code:** Start in the `app/` directory and look for files that seem directly related to the refactor.
+3.  **Small changes:** Try making a very small, isolated change to a file and testing it to see if it works.
+
+## One question to ask the maintainer
+
+“Could you point me to the specific part of the codebase that needs to be refactored, and explain the reasoning behind it?”
+
+**Hallucinated files:** none
